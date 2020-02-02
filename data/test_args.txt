@@ -1,0 +1,153 @@
+public static function rest_api_init() {
+  register_rest_route(
+    'lgp_api/v1/',
+    'get_statistic/',
+    [
+      'methods'             => WP_REST_Server::READABLE,
+      'callback'            => [__CLASS__, 'get_livegame_statistics'],
+      //'permission_callback' => 'is_user_logged_in',
+      'args'                => array(
+        'sport_type'   => array(
+              'type'         => 'string',
+              'required'     => true,
+              'description'  => 'Code of sport type',
+              'enum'         => array(
+                    'soccer',
+                    'hokkey',
+                    'basketball',
+                    'tennis',
+              ),
+              'default' => 'soccer',
+        ),
+        'market_type'   => array(
+              'type'         => 'string',
+              'required'     => true,
+              'description'  => 'Code of market type',
+              'enum'         => array(
+                    'total',
+                    'handicap',
+              ),
+              'default' => 'total',
+        ),
+        'championship' => array(
+              'type'         => 'string',
+              'required'     => true,
+              'description'  => 'Code of campionship or league',
+              'enum'         => array(
+                    'khl',
+                    'rpl',
+                    'fnl',
+                    'apl',
+                    'france',
+                    'germany',
+                    'spain',
+                    'nhl'
+              ),
+              'default' => 'rpl',
+        ),
+        'allTeams'     => array(
+              //'type'         => 'boolean',
+              //'default'      => true,
+              'description'  => 'Include in result all teams',
+        ),
+        'all_tally'    => array(
+              //'type'         => 'boolean',
+              'description'  => 'Include all tally in query',
+              //'default'      => false,
+        ),
+        'host_team'    => array(
+              'type'         => 'string',
+              'description'  => 'Host team',
+              'sanitize_callback' => function ( $param, $request, $key ) {
+                  return sanitize_text_field( $param );
+              },
+              'validate_callback' => function($param, $request, $key) {
+                  return is_string( $param );
+              },
+        ),
+        'guest_team'   => array(
+              'type'         => 'string',
+              'description'  => 'Quest team',
+              'sanitize_callback' => function ( $param, $request, $key ) {
+                  return sanitize_text_field( $param );
+              },
+              'validate_callback' => function($param, $request, $key) {
+                  return is_string( $param );
+              },
+        ),
+        'time1'        => array(
+              'type'              => 'integer',
+              'minimum'           => 0,
+              'maximum'           => 89,
+              'default'           => 0,
+              'description'       => 'Period start from min',
+              'validate_callback' => function($param, $request, $key) {
+                return is_numeric( $param );
+              },
+              'sanitize_callback' => function ( $param, $request, $key ) {
+                return (int) $param;
+              },
+        ),
+        'time2'        => array(
+              'type'              => 'integer',
+              'minimum'           => 1,
+              'maximum'           => 90,
+              'default'           => 90,
+              'description'       => 'Period end at min',
+              'validate_callback' => function($param, $request, $key) {
+                return is_numeric( $param );
+              },
+              'sanitize_callback' => function ( $param, $request, $key ) {
+                return (int) $param;
+              },
+        ),
+        'host_tally'   => array(
+              //'type'              => 'number',
+              'description'       => 'How many goals hosts team have',
+              /*'validate_callback' => function($param, $request, $key) {
+                return is_numeric( $param );
+              },
+              'sanitize_callback' => function ( $param, $request, $key ) {
+                return $param;
+              },*/
+        ),
+        'guest_tally'  => array(
+              //'type'              => 'number',
+              'description'       => 'How many goals guest team have',
+              /*'validate_callback' => function($param, $request, $key) {
+                return is_numeric( $param );
+              },
+              'sanitize_callback' => function ( $param, $request, $key ) {
+                return $param;
+              },*/
+        ),
+        'total'        => array(
+              //'type'              => 'number',
+              'description'       => 'Total',
+              //'default'           => 0.5,
+              /*'validate_callback' => function($param, $request, $key) {
+                return is_float( $param );
+              },
+              'sanitize_callback' => function ( $param, $request, $key ) {
+                return (float)$param;
+              },*/
+        ),
+        'handicap'     => array(
+              //'type'         => 'number',
+              'description'  => 'Handicap',
+              //'default'      => -1.5,
+              /*'validate_callback' => function($param, $request, $key) {
+                return is_float( $param );
+              },*/
+        ),
+        'tally'        => array(
+              'type'        =>  'string',
+              'description' =>  'Make final tally from host and guest tally',
+              'validate_callback' => function($param, $request, $key) {
+                return is_float( $param );
+              },
+        ),
+      ),
+    ]
+  );
+}
