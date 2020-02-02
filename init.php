@@ -1,13 +1,18 @@
 <?php
 namespace LGP\Livegamepro;
 
-/*
-Plugin Name: LiveGame.pro Statistics
-Description: Спортивная статистика, для PRO игроков  в лайве
-Author: Evgeniy Rezanov
-Author URI: https://evgrezanov.github.io/
-Version: 1.4
-*/
+/**
+ * Plugin Name: LiveGame.pro Statistics API
+ * Description: Спортивная статистика, для PRO игроков  в лайве
+ * Plugin URI:  https://github.com/evgrezanov/livegame-pro-statistics-api
+ * Author URI:  https://evgrezanov.github.io/
+ * Author:      Evgeniy Rezanov
+ * Version:     1.4.1
+ * GitHub Plugin URI: evgrezanov/livegame-pro-statistics-api
+ * GitHub Plugin URI: https://github.com/evgrezanov/livegame-pro-statistics-api
+ * Text Domain: livegame-pro-statistics-api
+ * Domain Path: /languages
+ */
 
 defined('ABSPATH') || exit;
 
@@ -25,7 +30,6 @@ class Livegamepro_Core {
     add_action('plugins_loaded', function() {
       require_once('inc/class-rest-api-endpoint.php');
       require_once('inc/class-input-form.php');
-      require_once('inc/class-table-result.php');
       require_once('inc/class-settings.php');
     }, 9999);
 

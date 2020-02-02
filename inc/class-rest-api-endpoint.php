@@ -68,7 +68,7 @@ class Livegame_Rest_Api_Endpoint {
         // +add tally and score to query
         //if (!empty($_REQUEST['all_tally'])):
           $all_tally = (int)$_REQUEST['all_tally'];
-          print_r($_REQUEST['all_tally'] . $_REQUEST['host_tally'] . $_REQUEST['guest_tally']);
+          
           if (!$all_tally):
 
             // check host_tally & guest_tally
