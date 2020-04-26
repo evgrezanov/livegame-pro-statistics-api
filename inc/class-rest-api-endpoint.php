@@ -35,12 +35,12 @@ class Livegame_Rest_Api_Endpoint {
 		  }*/
 
       // we check request for empty or wrong fields
-      if ( !empty($_REQUEST['sport_league']) ):
+      /*if ( !empty($_REQUEST['sport_league']) ):
         $sport_league = $_REQUEST['sport_league'];
       endif;
-
+*/
       $params = array();
-
+      var_dump($_REQUEST);
       if ( !empty($_REQUEST['sport_league']) ):
         $sport_league = $_REQUEST['sport_league'];
         $params['sport_league'] = $sport_league;
@@ -70,7 +70,6 @@ class Livegame_Rest_Api_Endpoint {
           $all_tally = (int)$_REQUEST['all_tally'];
           
           if (!$all_tally):
-
             // check host_tally & guest_tally
             if (!empty($host_tally = $_REQUEST['host_tally']) && !empty($guest_tally = $_REQUEST['guest_tally'])):
 
@@ -157,19 +156,25 @@ class Livegame_Rest_Api_Endpoint {
         endif;
 
         // add all parameters to query
-        foreach($param_query as $key => $element) {
-          if ($key === array_key_last($param_query)):
-            $matches_total_b .= ' AND ' . $element;
-            $matches_total_m .= ' AND ' . $element;
-          else:
-            $matches_total_b .= $element;
-            $matches_total_m .= $element;
-          endif;
-        }
+        //$array = array('имя', 'почта', 'телефон');
+        $matches_total_b = implode(' AND ', $param_query);
+        $matches_total_m = implode(' AND ', $param_query);
+        //var_dump();
+        //foreach($param_query as $key => $element) {
+          //if( !function_exists('array_key_last') ) {
+          //if ($key === array_key_last($param_query)):
+              //$matches_total_b .= ' AND ' . $element;
+              //$matches_total_m .= ' AND ' . $element;
+          //else:
+            //$matches_total_b .= $element;
+            //$matches_total_m .= $element;
+          //endif;
+        //}
 
         $matches_total_b_game = $matches_total_b . ' GROUP BY game_id';
         $matches_total_m_game = $matches_total_m . ' GROUP BY game_id';
-
+        var_dump($matches_total_b);
+        var_dump($matches_total_m);
         //SELECT id, game_id, team1, tally_goals_time_of_tally, tally_name FROM wp_rpl WHERE score(game_id, 80) = "1:1" AND goals(game_id, 80, 90) > 0.5 AND score(game_id, 80) = "1:1""
         $matches_total_b_r = $wpdb->get_results($matches_total_b);
         $total_b = count($matches_total_b_r);
@@ -184,8 +189,9 @@ class Livegame_Rest_Api_Endpoint {
 
         $term = get_term_by('slug', $sport_league, 'sports');
         $params['sports_name'] = $term->name;
-        $params['sports_url'] = get_term_link($term->term_id, 'sports');;
-        $min_kf =round( (1/10*$total_m+$total_m)/$total_b+1, 2, PHP_ROUND_HALF_UP);
+        $params['sports_url'] = get_term_link($term->term_id, 'sports');
+        //var_dump($total_b);
+        $min_kf =round( ((1/(10*$total_m)+$total_m)/($total_b+1)), 2, PHP_ROUND_HALF_UP);
 
         $total_b_prcnt = '--';
         //$total_b_prcnt = round($total_b_prcnt, 0, PHP_ROUND_HALF_UP);

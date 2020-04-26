@@ -41,8 +41,8 @@ class Livegamepro_Core {
     wp_enqueue_script('wp-api');
     wp_enqueue_script(
         'livegame_form',
-        plugins_url('wph_sports_statics_filter/asset/formajax.js'), '',
-        '1.4.2',
+        plugins_url('livegame-pro-statistics-api/asset/formajax.js'), '',
+        '1.4.1',
         true
       );
     wp_enqueue_style( 'lgp_styles', plugins_url('asset/style.css', __FILE__) );
