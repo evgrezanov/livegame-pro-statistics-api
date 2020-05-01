@@ -11,7 +11,6 @@ class Livegame_Rest_Api_Endpoint {
 
     /**
     * init REST API by WP
-    *      https://livegame.pro/statistics/?time1=80&time2=90&host_tally=1&guest_tally=1&market_type=total&total=0.5&handicap=0.5
     * @url http://livegame.pro/wp-json/lgp_api/v1/get_statistic/sport_type=soccer&allTeams=1&team_guest=1&team_host=1&championship=rpl&time1=63&time2=90&host_tally=2&guest_tally=0&total=0.5&handicap=0.5
     */
     public static function rest_api_init() {
@@ -40,7 +39,7 @@ class Livegame_Rest_Api_Endpoint {
       endif;
 */
       $params = array();
-      var_dump($_REQUEST);
+      //var_dump($_REQUEST);
       if ( !empty($_REQUEST['sport_league']) ):
         $sport_league = $_REQUEST['sport_league'];
         $params['sport_league'] = $sport_league;
@@ -96,7 +95,7 @@ class Livegame_Rest_Api_Endpoint {
             $format = 'score("'.$table_name.'", game_id, %d) = "%d:%d"';
             $query_score = sprintf($format, $time1, $host_tally, $guest_tally);
             $param_query[] = stripslashes($query_score);
-            //$params['market_value'] = $market_value;
+            $params['tally'] = $host_tally.':'.$guest_tally;
         endif;
 
         // +add market type and value to query
@@ -156,25 +155,30 @@ class Livegame_Rest_Api_Endpoint {
         endif;
 
         // add all parameters to query
-        //$array = array('имя', 'почта', 'телефон');
-        $matches_total_b = implode(' AND ', $param_query);
-        $matches_total_m = implode(' AND ', $param_query);
-        //var_dump();
-        //foreach($param_query as $key => $element) {
-          //if( !function_exists('array_key_last') ) {
-          //if ($key === array_key_last($param_query)):
-              //$matches_total_b .= ' AND ' . $element;
-              //$matches_total_m .= ' AND ' . $element;
-          //else:
-            //$matches_total_b .= $element;
-            //$matches_total_m .= $element;
-          //endif;
-        //}
+        //$matches_total_b .= ' '.implode(' AND ', $param_query);
+        //$matches_total_m .= ' '.implode(' AND ', $param_query);
+        
+        //get last key of array
+        end($param_query);
+        $last_key = key($param_query);
+        //var_dump($last_key);
+        reset($param_query);
+        
+        foreach($param_query as $key => $element) {
+          //if ($key != $last_key):
+              $item =  " AND "  . $element;
+              $matches_total_b .= $item;
+              $matches_total_m .= $item;
+          /*else:
+            $item =  " "  . $element;
+            $matches_total_b .= ' '.$item;
+            $matches_total_m .= ' '.$item;
+          endif;*/
+        }
 
         $matches_total_b_game = $matches_total_b . ' GROUP BY game_id';
         $matches_total_m_game = $matches_total_m . ' GROUP BY game_id';
-        var_dump($matches_total_b);
-        var_dump($matches_total_m);
+        
         //SELECT id, game_id, team1, tally_goals_time_of_tally, tally_name FROM wp_rpl WHERE score(game_id, 80) = "1:1" AND goals(game_id, 80, 90) > 0.5 AND score(game_id, 80) = "1:1""
         $matches_total_b_r = $wpdb->get_results($matches_total_b);
         $total_b = count($matches_total_b_r);
@@ -190,8 +194,8 @@ class Livegame_Rest_Api_Endpoint {
         $term = get_term_by('slug', $sport_league, 'sports');
         $params['sports_name'] = $term->name;
         $params['sports_url'] = get_term_link($term->term_id, 'sports');
-        //var_dump($total_b);
-        $min_kf =round( ((1/(10*$total_m)+$total_m)/($total_b+1)), 2, PHP_ROUND_HALF_UP);
+
+        //$min_kf =round( ((1/(10*$total_m)+$total_m)/($total_b+1)), 2, PHP_ROUND_HALF_UP);
 
         $total_b_prcnt = '--';
         //$total_b_prcnt = round($total_b_prcnt, 0, PHP_ROUND_HALF_UP);
@@ -207,11 +211,11 @@ class Livegame_Rest_Api_Endpoint {
           'total_b'       => $matches_total_b_r,
           'totab_b_query' => $matches_total_b,
           'total_b_prcnt' => $total_b_prcnt.'%',
-          'total_game_b' => $total_games_b_c,
+          'total_game_b'  => $total_games_b_c,
           'matches_total_b_game' => $matches_total_b_game,
           'total_m_count' => count($matches_total_m_r),
           'total_m_prcnt' => $total_m_prcnt.'%',
-          'total_game_m' => $total_games_m_c,
+          'total_game_m'  => $total_games_m_c,
           'matches_total_m_game' => $matches_total_m_game,
           'total_m'       => $matches_total_m_r,
           'totab_m_query' => $matches_total_m,
