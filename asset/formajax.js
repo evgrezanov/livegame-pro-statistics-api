@@ -140,9 +140,9 @@ var LGP_StatisticRequest = {
       ).appendTo("#lgp_tb");
     });
     document.querySelector("#v-pills-totalb-tab").innerHTML =
-      'Тотал Больше <span class="badge badge-pill badge-primary">' +
+      'Тотал Больше <span class="badge badge-pill badge-primary" data-toggle="tooltip" data-placement="top" title="Количество голов">' +
       response.total_b_count +
-      '</span><span class="badge badge-pill badge-success">' +
+      '</span><span class="badge badge-pill badge-success" data-toggle="tooltip" data-placement="top" title="Количество матчей">' +
       response.total_game_b +
       "</span>";
 
@@ -172,9 +172,9 @@ var LGP_StatisticRequest = {
       ).appendTo("#lgp_tm");
     });
     document.querySelector("#v-pills-totalm-tab").innerHTML =
-      'Тотал Меньше <span class="badge badge-pill badge-primary">' +
+      'Тотал Меньше <span class="badge badge-pill badge-primary" data-toggle="tooltip" data-placement="top" title="Количество голов">' +
       response.total_m_count +
-      '</span><span class="badge badge-pill badge-success">' +
+      '</span><span class="badge badge-pill badge-success" data-toggle="tooltip" data-placement="top" title="Количество матчей">' +
       response.total_game_m +
       "</span>";
 
@@ -251,3 +251,7 @@ $("#marketType").on("change", function () {
   }
 });
 $("#marketType").trigger("change");
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});

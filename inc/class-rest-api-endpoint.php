@@ -153,27 +153,16 @@ class Livegame_Rest_Api_Endpoint {
               $params['quest_team'] = $_REQUEST['team2'];
             endif;
         endif;
-
-        // add all parameters to query
-        //$matches_total_b .= ' '.implode(' AND ', $param_query);
-        //$matches_total_m .= ' '.implode(' AND ', $param_query);
         
         //get last key of array
         end($param_query);
         $last_key = key($param_query);
-        //var_dump($last_key);
         reset($param_query);
-        
+        // add all parameters to query
         foreach($param_query as $key => $element) {
-          //if ($key != $last_key):
               $item =  " AND "  . $element;
               $matches_total_b .= $item;
               $matches_total_m .= $item;
-          /*else:
-            $item =  " "  . $element;
-            $matches_total_b .= ' '.$item;
-            $matches_total_m .= ' '.$item;
-          endif;*/
         }
 
         $matches_total_b_game = $matches_total_b . ' GROUP BY game_id';
@@ -195,26 +184,27 @@ class Livegame_Rest_Api_Endpoint {
         $params['sports_name'] = $term->name;
         $params['sports_url'] = get_term_link($term->term_id, 'sports');
 
-        //$min_kf =round( ((1/(10*$total_m)+$total_m)/($total_b+1)), 2, PHP_ROUND_HALF_UP);
-
-        $total_b_prcnt = '--';
+        $min_kf =(1/10*$total_m+$total_m)/($total_b+1);
+        $total = $total_b + $total_m;
+        
+        $total_b_prcnt = $total_b/$total*100;
         //$total_b_prcnt = round($total_b_prcnt, 0, PHP_ROUND_HALF_UP);
 
-        $total_m_prcnt = '--';
+        $total_m_prcnt = $total_m/$total*100;
         //$total_m_prcnt = round($total_m_prcnt, 0, PHP_ROUND_HALF_UP);
 
         $response = [
           'result'        => 'success',
           'params'        => $params,
-          'min_kf'        => $min_kf,
+          'min_kf'        => round($min_kf, 2, PHP_ROUND_HALF_UP),
           'total_b_count' => count($matches_total_b_r),
           'total_b'       => $matches_total_b_r,
           'totab_b_query' => $matches_total_b,
-          'total_b_prcnt' => $total_b_prcnt.'%',
+          'total_b_prcnt' => round($total_b_prcnt, 0, PHP_ROUND_HALF_UP).'%',
           'total_game_b'  => $total_games_b_c,
           'matches_total_b_game' => $matches_total_b_game,
           'total_m_count' => count($matches_total_m_r),
-          'total_m_prcnt' => $total_m_prcnt.'%',
+          'total_m_prcnt' => round($total_m_prcnt, 0, PHP_ROUND_HALF_UP).'%',
           'total_game_m'  => $total_games_m_c,
           'matches_total_m_game' => $matches_total_m_game,
           'total_m'       => $matches_total_m_r,
