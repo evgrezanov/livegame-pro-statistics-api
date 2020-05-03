@@ -7,7 +7,7 @@ namespace LGP\Livegamepro;
  * Plugin URI:  https://github.com/evgrezanov/livegame-pro-statistics-api
  * Author URI:  https://evgrezanov.github.io/
  * Author:      Evgeniy Rezanov
- * Version:     1.5.2
+ * Version:     1.5.3
  * GitHub Plugin URI: evgrezanov/livegame-pro-statistics-api
  * GitHub Plugin URI: https://github.com/evgrezanov/livegame-pro-statistics-api
  * Text Domain: livegame-pro-statistics-api
@@ -43,7 +43,7 @@ class Livegamepro_Core {
         'livegame_form',
         plugins_url('livegame-pro-statistics-api/asset/formajax.js'), 
         '',
-        '1.5.2',
+        '1.5.3',
         true
     );
     wp_enqueue_style( 'lgp_styles', plugins_url('asset/style.css', __FILE__) );

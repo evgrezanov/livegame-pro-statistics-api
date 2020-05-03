@@ -20,6 +20,7 @@ class Livegame_Rest_Api_Endpoint {
         [
           'methods'             => WP_REST_Server::CREATABLE,
           'callback'            => [__CLASS__, 'get_livegame_statistics'],
+          'permission_callback' => 'is_user_logged_in',
         ]
       );
     }
@@ -39,7 +40,6 @@ class Livegame_Rest_Api_Endpoint {
       endif;
 */
       $params = array();
-      //var_dump($_REQUEST);
       if ( !empty($_REQUEST['sport_league']) ):
         $sport_league = $_REQUEST['sport_league'];
         $params['sport_league'] = $sport_league;
@@ -106,6 +106,7 @@ class Livegame_Rest_Api_Endpoint {
                 $matches_total_b .= 'goals("'.$table_name.'", game_id, '.$time1.', '.$time2.') > '.$market_value;
                 $matches_total_m .= 'goals("'.$table_name.'", game_id, '.$time1.', '.$time2.') < '.$market_value;
                 $params['market'] = 'Тотал <strong>'. $market_value.'</strong> на '.$time2. ' минуту матча.';
+                $params['market_name'] = 'Тотал';
                 break;
               case "handicap":
                 //add handicap to query
@@ -114,6 +115,7 @@ class Livegame_Rest_Api_Endpoint {
                   $matches_total_b .= 'handicap("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $matches_total_m .= 'handicap2("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $params['market'] = 'Фора хозяев <strong>'. $market_value.'</strong> на '.$time2. ' минуту матча.';
+                  $params['market_name'] = 'Фора';
                 endif;
                 break;
               case "handicap2":
@@ -123,6 +125,7 @@ class Livegame_Rest_Api_Endpoint {
                   $matches_total_b .= 'handicap2("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $matches_total_m .= 'handicap("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $params['market'] = 'Фора гостей <strong>'. $market_value.'</strong> на '.$time2. ' минуту матча.';
+                  $params['market_name'] = 'Фора';
                 endif;
                 break;
           }

@@ -61,6 +61,13 @@ var FormAjax = function (elementSelector, ep, args = []) {
         submitBtn.value = submitBtnText;
 
         LGP_StatisticRequest.processing_success(response);
+      } else if (request.status == 401) {
+        form.querySelector(".response").innerHTML =
+          '<div class="error_login"><p class="error">' +
+          "Вы должны быть авторизованы на сайте чтобы выполнять выборку.</p></div>";
+        // Снимаем ограничение с кнопки и возвращаем прежнее значение
+        submitBtn.disabled = false;
+        submitBtn.value = submitBtnText;
       } else {
         form.querySelector(".response").innerHTML =
           '<div class="error_login"><p class="error">' +
@@ -140,7 +147,8 @@ var LGP_StatisticRequest = {
       ).appendTo("#lgp_tb");
     });
     document.querySelector("#v-pills-totalb-tab").innerHTML =
-      'Тотал Больше <span class="badge badge-pill badge-primary" data-toggle="tooltip" data-placement="top" title="Количество голов">' +
+      response.params.market_name +
+      ' Больше <span class="badge badge-pill badge-primary" data-toggle="tooltip" data-placement="top" title="Количество голов">' +
       response.total_b_count +
       '</span><span class="badge badge-pill badge-success" data-toggle="tooltip" data-placement="top" title="Количество матчей">' +
       response.total_game_b +
@@ -172,7 +180,8 @@ var LGP_StatisticRequest = {
       ).appendTo("#lgp_tm");
     });
     document.querySelector("#v-pills-totalm-tab").innerHTML =
-      'Тотал Меньше <span class="badge badge-pill badge-primary" data-toggle="tooltip" data-placement="top" title="Количество голов">' +
+      response.params.market_name +
+      ' Меньше <span class="badge badge-pill badge-primary" data-toggle="tooltip" data-placement="top" title="Количество голов">' +
       response.total_m_count +
       '</span><span class="badge badge-pill badge-success" data-toggle="tooltip" data-placement="top" title="Количество матчей">' +
       response.total_game_m +
