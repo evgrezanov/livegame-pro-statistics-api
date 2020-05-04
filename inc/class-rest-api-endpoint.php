@@ -187,13 +187,13 @@ class Livegame_Rest_Api_Endpoint {
         $params['sports_name'] = $term->name;
         $params['sports_url'] = get_term_link($term->term_id, 'sports');
 
-        $min_kf =(1/10*$total_m+$total_m)/($total_b+1);
-        $total = $total_b + $total_m;
+        $min_kf =1+(1/10*$total_games_m_c+$total_games_m_c)/($total_games_b_c+1);
+        $total = $total_games_b_c + $total_games_m_c;
         
-        $total_b_prcnt = $total_b/$total*100;
+        $total_b_prcnt = $total_games_b_c/$total*100;
         //$total_b_prcnt = round($total_b_prcnt, 0, PHP_ROUND_HALF_UP);
 
-        $total_m_prcnt = $total_m/$total*100;
+        $total_m_prcnt = $total_games_m_c/$total*100;
         //$total_m_prcnt = round($total_m_prcnt, 0, PHP_ROUND_HALF_UP);
 
         $response = [
