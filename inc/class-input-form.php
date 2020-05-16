@@ -15,13 +15,13 @@ class Livegame_Input_Form {
 <h4 class="mb-3">Лига или чемпионат</h4>
 <div class="form-check d-block my-3">
     <div class="col-md-12 my-3">
-        <select class="custom-select" id="sport_league" name="sport_league"
-            aria-label="Example select with button addon">
+        <select class="custom-select" id="sport_league" name="sport_league">
             <optgroup label="Хоккей">
                 <?php
                   if (!empty($hokkey_leagues)):
                     foreach ($hokkey_leagues as $league): ?>
-                <option value="<?php echo $league->slug; ?>"><?php echo $league->name; ?></option>
+                <option value="<?php echo $league->id; ?>">
+                    <?php echo $league->name; ?></option>
                 <?php
                     endforeach;
                   endif;
@@ -31,7 +31,8 @@ class Livegame_Input_Form {
                 <?php
                   if (!empty($soccer_leagues)):
                     foreach ($soccer_leagues as $league): ?>
-                <option value="<?php echo $league->slug; ?>"><?php echo $league->name; ?></option>
+                <option value="<?php echo $league->id; ?>">
+                    <?php echo $league->name; ?></option>
                 <?php
                     endforeach;
                   endif;
@@ -49,34 +50,19 @@ class Livegame_Input_Form {
 <!-- teams -->
 <h4 class="mb-3">Команды</h4>
 <div class="form-check d-block my-3">
-    <input checked disabled class="form-check-input" type="checkbox" value="1" id="allTeams" name="allTeams">
+    <input checked class="form-check-input" type="checkbox" value="1" id="allTeams" name="allTeams">
     <label class="form-check-label" for="allTeams">Выбрать команды</label>
 </div>
 <div class="row">
     <div class="col-md-6 mb-3">
         <label for="host_team">Хозяева</label>
         <select disabled class="custom-select d-block w-100" required="required" id="host_team" name="host_team">
-            <option value="1">Команда 1</option>
-            <option value="2">Команда 2</option>
-            <option value="3">Команда 3</option>
-            <option value="4">Команда 4</option>
-            <option value="5">Команда 5</option>
-            <option value="6">Команда 6</option>
-            <option value="7">Команда 7</option>
-            <option value="8">Команда 8</option>
         </select>
         <small class="text-muted">Команда принимающая матч</small>
     </div>
     <div class="col-md-6 mb-3">
         <label for="guest_team">Гости</label>
         <select class="custom-select d-block w-100" required="required" id="guest_team" name="guest_team" disabled>
-            <option value="1">Команда 1</option>
-            <option value="2">Команда 2</option>
-            <option value="3">Команда 3</option>
-            <option value="4">Команда 4</option>
-            <option value="5">Команда 5</option>
-            <option value="6">Команда 6</option>
-            <option value="7">Команда 7</option>
         </select>
         <small class="text-muted">Команда гостей</small>
     </div>

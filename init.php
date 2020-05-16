@@ -39,14 +39,25 @@ class Livegamepro_Core {
 
   public static function assets(){
     wp_enqueue_script('wp-api');
+    
+    wp_enqueue_script(
+      'select2',
+      plugins_url('livegame-pro-statistics-api/lib/select2.min.js'), 
+      '',
+      '1.5.3',
+      true
+    );
+    
     wp_enqueue_script(
         'livegame_form',
         plugins_url('livegame-pro-statistics-api/asset/formajax.js'), 
-        '',
+        array('select2'),
         '1.5.3',
         true
     );
     wp_enqueue_style( 'lgp_styles', plugins_url('asset/style.css', __FILE__) );
+    wp_enqueue_style( 'select2_styles', plugins_url('lib/select2.min.css', __FILE__) );
+
   }
 
 }

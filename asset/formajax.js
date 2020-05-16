@@ -96,12 +96,12 @@ var LGP_StatisticRequest = {
     arrayResult["allTeams"] = document.getElementById("allTeams").value;
 
     var host_team_select = document.getElementById("host_team");
-    arrayResult["host_team"] =
-      host_team_select.options[host_team_select.selectedIndex].value;
+    arrayResult["host_team"] = $("#host_team").val();
+    //host_team_select.options[host_team_select.selectedIndex].value;
 
     var guest_team_select = document.getElementById("guest_team");
-    arrayResult["guest_team"] =
-      guest_team_select.options[guest_team_select.selectedIndex].value;
+    arrayResult["guest_team"] = $("#guest_team").val();
+    //guest_team_select.options[guest_team_select.selectedIndex].value;
 
     arrayResult["time1"] = document.getElementById("time1").value;
     arrayResult["time2"] = document.getElementById("time2").value;
@@ -212,24 +212,16 @@ var LGP_StatisticRequest = {
       {
         width: response.total_b_prcnt,
       },
-      3500
+      1500
     );
     $("#progress-tm").animate(
       {
         width: response.total_m_prcnt,
       },
-      3500
+      1500
     );
   },
 };
-
-document.addEventListener("DOMContentLoaded", function () {
-  FormAjax(
-    "#lgpFilterForm",
-    "lgp_api/v1/get_statistic",
-    LGP_StatisticRequest.get_params()
-  );
-});
 
 // choose checkbox all team
 document.getElementById("allTeams").onchange = function () {
@@ -263,4 +255,78 @@ $("#marketType").trigger("change");
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
+});
+
+$("#sport_league").select2({
+  templateSelection: function (data, container) {
+    return data.id;
+  },
+});
+
+$("#host_team").select2({
+  formatSelection: function (item) {
+    return item.text;
+  },
+  ajax: {
+    url: "http://livegame.local/wp-json/wp/v2/teams",
+    dataType: "json",
+    allowClear: true,
+    data: function (params) {
+      var query = {
+        sports: $("#sport_league").select2().find(":selected").attr("id"),
+        /*exclude: $("#quests_team")
+          .find(":selected")
+          .data("custom-quests-team-id"),*/
+      };
+      console.log($("#sport_league").select2().find(":selected").attr("id"));
+      return query;
+    },
+    processResults: function (data) {
+      return {
+        results: jQuery.map(data, function (obj) {
+          return { id: obj.id, text: obj.title.rendered };
+        }),
+      };
+    },
+    cache: true,
+  },
+});
+
+$("#guest_team").select2({
+  templateSelection: function (data, container) {
+    $(data.element).attr("guest-team-id", data.customValue);
+    return data.text;
+  },
+  ajax: {
+    url: "http://livegame.local/wp-json/wp/v2/teams",
+    dataType: "json",
+    allowClear: true,
+    data: function (params) {
+      var query = {
+        sports: $("#sport_league")
+          .find(":selected")
+          .data("custom-sport-league-id"),
+        exclude: $("#hosts_team")
+          .find(":selected")
+          .data("custom-hosts-team-id"),
+      };
+      return query;
+    },
+    processResults: function (data) {
+      return {
+        results: jQuery.map(data, function (obj) {
+          return { id: obj.id, text: obj.title.rendered };
+        }),
+      };
+    },
+    cache: true,
+  },
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  FormAjax(
+    "#lgpFilterForm",
+    "lgp_api/v1/get_statistic",
+    LGP_StatisticRequest.get_params()
+  );
 });

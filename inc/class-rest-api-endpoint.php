@@ -42,10 +42,11 @@ class Livegame_Rest_Api_Endpoint {
       $params = array();
       if ( !empty($_REQUEST['sport_league']) ):
         $sport_league = $_REQUEST['sport_league'];
-        $params['sport_league'] = $sport_league;
+        $league = get_term_by('id',$sport_league);
+        $params['sport_league'] = $league->slug;
         global $wpdb;
 
-        $table_name = $wpdb->prefix.$sport_league;
+        $table_name = $wpdb->prefix.$league->slug;
 
         $query  = "SELECT * FROM " .$table_name. " WHERE " ;
 
