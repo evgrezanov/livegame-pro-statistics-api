@@ -7,7 +7,7 @@ namespace LGP\Livegamepro;
  * Plugin URI:  https://github.com/evgrezanov/livegame-pro-statistics-api
  * Author URI:  https://evgrezanov.github.io/
  * Author:      Evgeniy Rezanov
- * Version:     1.5.3
+ * Version:     1.6.1
  * GitHub Plugin URI: evgrezanov/livegame-pro-statistics-api
  * GitHub Plugin URI: https://github.com/evgrezanov/livegame-pro-statistics-api
  * Text Domain: livegame-pro-statistics-api
@@ -39,24 +39,23 @@ class Livegamepro_Core {
 
   public static function assets(){
     wp_enqueue_script('wp-api');
-    
     wp_enqueue_script(
-      'select2',
-      plugins_url('livegame-pro-statistics-api/lib/select2.min.js'), 
-      '',
-      '1.5.3',
+      'bootstrap-select-js',
+      plugins_url('livegame-pro-statistics-api/asset/bootstrap-select/js/bootstrap-select.min.js'), 
+      array('jquery'),
+      '1.6',
+      true
+    );
+    wp_enqueue_script(
+      'livegame_form',
+      plugins_url('livegame-pro-statistics-api/asset/formajax.js'), 
+      array('jquery'),
+      '1.6',
       true
     );
     
-    wp_enqueue_script(
-        'livegame_form',
-        plugins_url('livegame-pro-statistics-api/asset/formajax.js'), 
-        array('select2'),
-        '1.5.3',
-        true
-    );
     wp_enqueue_style( 'lgp_styles', plugins_url('asset/style.css', __FILE__) );
-    wp_enqueue_style( 'select2_styles', plugins_url('lib/select2.min.css', __FILE__) );
+    wp_enqueue_style( 'bootstrap-select-css', plugins_url('asset/bootstrap-select/css/bootstrap-select.css', __FILE__) );
 
   }
 

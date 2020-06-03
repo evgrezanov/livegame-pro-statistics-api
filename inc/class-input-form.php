@@ -11,16 +11,17 @@ class Livegame_Input_Form {
     $soccer_leagues = get_terms('sports', 'child_of=2&hide_empty=0');
     $hokkey_leagues = get_terms('sports', 'child_of=4&hide_empty=0');
     ?>
+
 <!-- league -->
 <h4 class="mb-3">Лига или чемпионат</h4>
 <div class="form-check d-block my-3">
     <div class="col-md-12 my-3">
-        <select class="custom-select" id="sport_league" name="sport_league">
+        <select id="lgp_league" class="lgp_league custom-select" name="sport_league">
             <optgroup label="Хоккей">
                 <?php
                   if (!empty($hokkey_leagues)):
                     foreach ($hokkey_leagues as $league): ?>
-                <option value="<?php echo $league->id; ?>">
+                <option value="<?php echo $league->term_id; ?>">
                     <?php echo $league->name; ?></option>
                 <?php
                     endforeach;
@@ -31,7 +32,7 @@ class Livegame_Input_Form {
                 <?php
                   if (!empty($soccer_leagues)):
                     foreach ($soccer_leagues as $league): ?>
-                <option value="<?php echo $league->id; ?>">
+                <option value="<?php echo $league->term_id; ?>">
                     <?php echo $league->name; ?></option>
                 <?php
                     endforeach;
@@ -49,20 +50,20 @@ class Livegame_Input_Form {
     ?>
 <!-- teams -->
 <h4 class="mb-3">Команды</h4>
-<div class="form-check d-block my-3">
-    <input checked class="form-check-input" type="checkbox" value="1" id="allTeams" name="allTeams">
-    <label class="form-check-label" for="allTeams">Выбрать команды</label>
-</div>
-<div class="row">
+<div id="lgp_teams_section" class="row">
     <div class="col-md-6 mb-3">
         <label for="host_team">Хозяева</label>
-        <select disabled class="custom-select d-block w-100" required="required" id="host_team" name="host_team">
+        <select id="lgp_host_team" data-style="btn-info" data-max-options="1" data-header="Выберите команду хозяев"
+            class="form-control" name="host" title="Выберите команду хозяев...">
+            <option value="0">Команда хозяев</option>
         </select>
         <small class="text-muted">Команда принимающая матч</small>
     </div>
     <div class="col-md-6 mb-3">
         <label for="guest_team">Гости</label>
-        <select class="custom-select d-block w-100" required="required" id="guest_team" name="guest_team" disabled>
+        <select id="lgp_quest_team" data-style="btn-info" data-max-options="1" data-header="Выберите команду гостей"
+            class="form-control" name="quest" title="Выберите команду гостей...">
+            <option value="0">Команда гостей</option>
         </select>
         <small class="text-muted">Команда гостей</small>
     </div>
@@ -232,11 +233,11 @@ class Livegame_Input_Form {
             <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                 <!-- form -->
                 <form method="post" id="lgpFilterForm" class="needs-validation" novalidate>
+                    <div id="lgp_choose_league_teams">
+                        <?php self::lgp_generate_league_selecbox(); ?>
 
-                    <?php self::lgp_generate_league_selecbox(); ?>
-
-                    <?php self::lgp_generate_teams_inputs(); ?>
-
+                        <?php self::lgp_generate_teams_inputs(); ?>
+                    </div>
                     <?php self::lgp_generate_tally_inputs(); ?>
 
                     <?php self::lgp_generate_times_inputs(); ?>

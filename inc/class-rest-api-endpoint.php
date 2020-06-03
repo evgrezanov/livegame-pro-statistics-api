@@ -20,7 +20,7 @@ class Livegame_Rest_Api_Endpoint {
         [
           'methods'             => WP_REST_Server::CREATABLE,
           'callback'            => [__CLASS__, 'get_livegame_statistics'],
-          'permission_callback' => 'is_user_logged_in',
+          //'permission_callback' => 'is_user_logged_in',
         ]
       );
     }
@@ -42,7 +42,7 @@ class Livegame_Rest_Api_Endpoint {
       $params = array();
       if ( !empty($_REQUEST['sport_league']) ):
         $sport_league = $_REQUEST['sport_league'];
-        $league = get_term_by('id',$sport_league);
+        $league = get_term_by('id', $sport_league, 'sports');
         $params['sport_league'] = $league->slug;
         global $wpdb;
 
@@ -136,27 +136,25 @@ class Livegame_Rest_Api_Endpoint {
 
         // if checkbox "all teams" not checked
         // не тестировал
-        if (!empty($_REQUEST["allTeams"])):
-          $allTeams = $_REQUEST['allTeams'];
+        //if (!empty($_REQUEST["allTeams"])):
+          //$allTeams = $_REQUEST['allTeams'];
 
             // $query_team1
-            if (!empty($_REQUEST['host_team'])):
+            if (!empty($_REQUEST['host'])):
               //Host team
-              $query_team1 = " team1 = '".$_REQUEST['team1']."' ";
+              $query_team1 = " team1_id = ".$_REQUEST['host']." ";
               $param_query[] = $query_team1;
-              $params['host_team'] = $_REQUEST['team1'];
-            else:
-              $query_team1 = '';
+              $params['host_team'] = $_REQUEST['host'];
             endif;
 
             // $query_team2
-            if (!empty($_REQUEST['quest_team'])):
+            if (!empty($_REQUEST['quest'])):
               //Quest team
-              $query_team2 = " team2 = '".$_REQUEST['team2']."' ";
+              $query_team2 = " team2_id = ".$_REQUEST['quest']." ";
               $param_query[] = $query_team2;
-              $params['quest_team'] = $_REQUEST['team2'];
+              $params['quest_team'] = $_REQUEST['quest'];
             endif;
-        endif;
+        //endif;
         
         //get last key of array
         end($param_query);
@@ -185,16 +183,16 @@ class Livegame_Rest_Api_Endpoint {
         $total_games_m_c = count($total_games_m);
 
         $term = get_term_by('slug', $sport_league, 'sports');
-        $params['sports_name'] = $term->name;
-        $params['sports_url'] = get_term_link($term->term_id, 'sports');
+        $params['sports_name'] = $league->name;
+        $params['sports_url'] = get_term_link($league->term_id, 'sports');
 
         $min_kf =1+(1/10*$total_games_m_c+$total_games_m_c)/($total_games_b_c+1);
         $total = $total_games_b_c + $total_games_m_c;
         
-        $total_b_prcnt = $total_games_b_c/$total*100;
+        //$total_b_prcnt = $total_games_b_c/$total*100;
         //$total_b_prcnt = round($total_b_prcnt, 0, PHP_ROUND_HALF_UP);
 
-        $total_m_prcnt = $total_games_m_c/$total*100;
+        //$total_m_prcnt = $total_games_m_c/$total*100;
         //$total_m_prcnt = round($total_m_prcnt, 0, PHP_ROUND_HALF_UP);
 
         $response = [
