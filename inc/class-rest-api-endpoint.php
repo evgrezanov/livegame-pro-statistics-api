@@ -30,15 +30,10 @@ class Livegame_Rest_Api_Endpoint {
     */
     public static function get_livegame_statistics(WP_REST_Request $request) {
 
-		  /*if (empty($rest_params)) {
+		  if (empty($request)) {
 			  return new \WP_Error('500', 'not defined $params');
-		  }*/
+		  }
 
-      // we check request for empty or wrong fields
-      /*if ( !empty($_REQUEST['sport_league']) ):
-        $sport_league = $_REQUEST['sport_league'];
-      endif;
-*/
       $params = array();
       if ( !empty($_REQUEST['sport_league']) ):
         $sport_league = $_REQUEST['sport_league'];
@@ -65,12 +60,10 @@ class Livegame_Rest_Api_Endpoint {
             $params['period'] = 'без учета времени';
         endif;
 
-        // +add tally and score to query
-        //if (!empty($_REQUEST['all_tally'])):
+          // +add tally and score to query
           $all_tally = (int)$_REQUEST['all_tally'];
           
           if (!$all_tally):
-            // check host_tally & guest_tally
             if (!empty($host_tally = $_REQUEST['host_tally']) && !empty($guest_tally = $_REQUEST['guest_tally'])):
 
                 $params['host_tally'] = $host_tally;
@@ -85,7 +78,6 @@ class Livegame_Rest_Api_Endpoint {
                 $params['tally'] = 'Без ограничения по счету';
             endif;
           endif;
-        //endif;
 
         // +add score to query
         if (!empty($_REQUEST['host_tally']) && !empty($_REQUEST['guest_tally']) && !empty($_REQUEST['time1']) ):
@@ -112,7 +104,6 @@ class Livegame_Rest_Api_Endpoint {
               case "handicap":
                 //add handicap to query
                 if (!empty($market_value) && !empty($time2)):
-                  //$query_handikap = 'handicap("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $matches_total_b .= 'handicap("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $matches_total_m .= 'handicap2("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $params['market'] = 'Фора хозяев <strong>'. $market_value.'</strong> на '.$time2. ' минуту матча.';
@@ -122,7 +113,6 @@ class Livegame_Rest_Api_Endpoint {
               case "handicap2":
                 //add handicap2 to query
                 if (!empty($market_value) && !empty($time2)):
-                  //$query_handikap = 'handicap2("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $matches_total_b .= 'handicap2("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $matches_total_m .= 'handicap("'.$table_name.'", game_id, '.$time2.', '.$market_value.')';
                   $params['market'] = 'Фора гостей <strong>'. $market_value.'</strong> на '.$time2. ' минуту матча.';
@@ -130,31 +120,20 @@ class Livegame_Rest_Api_Endpoint {
                 endif;
                 break;
           }
-          //$params['market_type'] = $market_type;
-          //$params['market_value'] = $market_value;
         endif;
 
-        // if checkbox "all teams" not checked
-        // не тестировал
-        //if (!empty($_REQUEST["allTeams"])):
-          //$allTeams = $_REQUEST['allTeams'];
-
-            // $query_team1
-            if (!empty($_REQUEST['host'])):
+            // $query_team2
+            // $query_team1 
+            if (  !empty($_REQUEST['host']) &&  !empty($_REQUEST['quest'])  ):
               //Host team
-              $query_team1 = " team1_id = ".$_REQUEST['host']." ";
+              $query_team1 = "team1_id = ".$_REQUEST['host']." ";
               $param_query[] = $query_team1;
               $params['host_team'] = $_REQUEST['host'];
+               //Quest team
+               $query_team2 = "team2_id = ".$_REQUEST['quest']." ";
+               $param_query[] = $query_team2;
+               $params['quest_team'] = $_REQUEST['quest'];
             endif;
-
-            // $query_team2
-            if (!empty($_REQUEST['quest'])):
-              //Quest team
-              $query_team2 = " team2_id = ".$_REQUEST['quest']." ";
-              $param_query[] = $query_team2;
-              $params['quest_team'] = $_REQUEST['quest'];
-            endif;
-        //endif;
         
         //get last key of array
         end($param_query);
